@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --main-bg-colour: rgba(15, 80, 180, 1);
+  --main-font-colour: white;
+  --main-font: "Ubuntu", sans-serif;
+  --lg-font-size: 35px;
+}
+
+body {
+  font-family: var(--main-font);
+}
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 96px;
+  width: 100%;
+  padding-left: 30px;
+  font-size: var(--lg-font-size);
+  color: var(--main-font-colour);
+  background-color: var(--main-bg-colour);
+}
+
+nav h1 {
+  margin-left: 18px;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  height: 800px;
+  width: 20%;
+  background-color: #DDDDDD;
+  padding: 20px;
+}
+
+.side-panel div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 8px;
+  padding: 20px;
+  height: 30px;
+  border-radius: 6px;
+
+}
+
+.side-panel div:hover {
+  background-color: #CCCCCC;
+  cursor: pointer;
+}
+
+.main-panel {
+  background-color: #EEEEEE;
+  height: 800px;
+  width: 85%;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  background-color: #403D3D;
+  color: var(--main-font-colour);
+}
