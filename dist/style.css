@@ -51,11 +51,19 @@ main {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 8px;
-  padding: 20px;
+  margin-top: 10px;
+  padding: 30px;
   height: 30px;
   border-radius: 6px;
+}
 
+.side-panel img {
+  margin-right: 8px;
+}
+
+.side-panel h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .side-panel div:hover {
@@ -63,17 +71,80 @@ main {
   cursor: pointer;
 }
 
+
 .main-panel {
   background-color: #EEEEEE;
   height: 800px;
   width: 85%;
 }
 
+.modal-container {
+  opacity: 1;
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px 40px;
+  width: 500px;
+  max-width: 100%;
+}
+
+.close-modal { 
+  position: relative;
+  bottom: 15px;
+  left: 180px;
+  font-size: 20px;
+  border-radius: 50%;
+  padding: 3px 8px;
+}
+
+.close-modal:hover {
+  cursor: pointer;
+  color: white;
+  background-color: #CE973E;
+  border-radius: 50%;
+}
+
+#add-project {
+  background-color: red;
+  display: flex;
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+#add-project div {
+  display: flex;
+  flex-direction: column;
+}
+#add-project input {
+  padding: 10px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+#addproject input:focus {
+  outline: none;
+}
+
 footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80px;
+  height: 65px;
   background-color: #403D3D;
   color: var(--main-font-colour);
 }

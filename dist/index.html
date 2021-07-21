@@ -16,16 +16,41 @@
   </header>
   <main>
     <main class="side-panel">
-      <div><h4>Home</h4></div>
-      <div><h4>Today</h4></div>
-      <div><h4>Week</h4></div>
+      <div id="home">
+        <img src="images/home.png" alt="">
+        <p>Home</p>
+      </div>
+      <div id="today">
+        <img src="images/today.png" alt="">
+        <p>Today</p>
+      </div>
+      <div id="week">
+        <img src="images/week.png" alt="">
+        <p>Week</p></div>
       <h2>Projects</h2>
-      <div><h4>Add Project</h4></div>
+      <div id="new-project">
+        <img src="images/add.png" alt="">
+        <p>new project</p>
+      </div>
     </main>
-    <div class="main-panel">
+    <main class="main-panel">
 
-    </div>
+    </main>
   </main>
+  <div class="modal-container">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>New Project</h2>
+      <form id="add-project" action="">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" placeholder="Fitness">
+        </div>
+      </form>
+        </div>
+      </form>
+    </div>
+  </div>
   <footer>
     <p>Copyright © 2021. Web Design by dvaanc.</p>
   </footer>

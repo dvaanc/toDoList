@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/dvaanc/toDoList#readme",
   "devDependencies": {
+    "date-fns": "^2.22.1",
     "webpack": "^5.45.1",
     "webpack-cli": "^4.7.2"
   }
