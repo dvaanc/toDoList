@@ -42,7 +42,7 @@ main {
   display: flex;
   flex-direction: column;
   height: 800px;
-  width: 20%;
+  min-width: 200px;
   background-color: #DDDDDD;
   padding: 20px;
 }
@@ -75,12 +75,12 @@ main {
 .main-panel {
   background-color: #EEEEEE;
   height: 800px;
-  width: 85%;
+  max-width: 85%;
 }
 
 .modal-container {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 0;
+  pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
@@ -97,54 +97,88 @@ main {
   background-color: #fff;
   border-radius: 5px;
   padding: 20px 40px;
-  width: 500px;
+  width: 600px;
   max-width: 100%;
 }
 
 .close-modal { 
   position: relative;
-  bottom: 15px;
-  left: 180px;
-  font-size: 20px;
+  left: 520px;
+  top: -10px;
+  font-size: 30px;
   border-radius: 50%;
-  padding: 3px 8px;
 }
 
 .close-modal:hover {
   cursor: pointer;
-  color: white;
-  background-color: #CE973E;
   border-radius: 50%;
+  width: 7px;
 }
 
-#add-project {
-  background-color: red;
+form {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
   padding: 15px;
   margin: 10px 0;
-  font-size: 1rem;
+  font-size: 16px;
+}
+
+.input-field {
+  padding: 8px;
+  margin-top: 8px;
+  margin-bottom: 25px;
+  width: 100%;
+  border: 1px solid #ada8a8;
+  border-radius: 5px;
+  box-shadow: none;
+  font-size: 16px;
+  overflow: visible;
+  background-color: white;
+}
+
+input:focus {
+  outline: none;
 }
 
 #add-project div {
   display: flex;
-  flex-direction: column;
-}
-#add-project input {
-  padding: 10px;
-  margin-top: 15px;
-  width: 100%;
+  margin: 0 auto;
+  width: 50%;
 }
 
-#addproject input:focus {
+select {
+  padding: 10px;
+}
+select:focus {
   outline: none;
+}
+
+#submit {
+  display: flex;
+  margin: 0 auto;
+  height: 40px;
+  width: 25%;
+  margin-top: 10px;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  background-color: #e2ba18;
+  font-family: var(--main-font);
+  color: rgb(255, 255, 255);
+  font-size: 18px;
+}
+
+#submit:hover {
+  cursor: pointer;
 }
 
 footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 65px;
+  height: 80px;
   background-color: #403D3D;
   color: var(--main-font-colour);
 }
