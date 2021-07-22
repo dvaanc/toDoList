@@ -42,7 +42,7 @@ main {
   display: flex;
   flex-direction: column;
   height: 800px;
-  min-width: 200px;
+  min-width: 15vw;
   background-color: #DDDDDD;
   padding: 20px;
 }
@@ -52,9 +52,12 @@ main {
   justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
-  padding: 30px;
+  padding: 20px;
+  padding-left: 8px;
+  padding-right: 8px;
   height: 30px;
   border-radius: 6px;
+  user-select: none;
 }
 
 .side-panel img {
@@ -75,10 +78,28 @@ main {
 .main-panel {
   background-color: #EEEEEE;
   height: 800px;
-  max-width: 85%;
+  min-width: 85vw;
+  padding: 30px;
 }
 
-.modal-container {
+.task {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 60%;
+  height: 40px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.task:hover {
+  background-color: #CCCCCC;
+  cursor: pointer;
+}
+
+.new-todo {
   opacity: 0;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
@@ -93,7 +114,12 @@ main {
   transition: opacity 0.2s ease;
 }
 
-.modal-content {
+.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.new-todo-content {
   background-color: #fff;
   border-radius: 5px;
   padding: 20px 40px;
@@ -101,7 +127,7 @@ main {
   max-width: 100%;
 }
 
-.close-modal { 
+.close-new-todo { 
   position: relative;
   left: 520px;
   top: -10px;
@@ -109,7 +135,7 @@ main {
   border-radius: 50%;
 }
 
-.close-modal:hover {
+.close-new-todo:hover {
   cursor: pointer;
   border-radius: 50%;
   width: 7px;
