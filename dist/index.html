@@ -50,13 +50,13 @@
       </form>
     </div>
   </div> -->
-  <div class="new-todo">
-    <div class="new-todo-content">
-      <span class="close-new-todo">&times;</span>
+  <div class="new-task">
+    <div class="new-task-content">
+      <span class="close-new-task">&times;</span>
       <h2>New Todo</h2>
-      <form id="new-todo" action="">
-        <label for="title"><p>Title:</p></label>
-        <input class="input-field" type="text" id="todo-title">
+      <form id="new-task" action="">
+        <label for="task-title"><p>Title:</p></label>
+        <input class="input-field" type="text" id="task-title">
 
         <label for="description"><p>Description:</p></label>
         <textarea class="input-field" rows="4" style="height: 120px" id="description"></textarea>
@@ -76,7 +76,7 @@
 
         </select>
 
-        <input type="submit" id="submit">
+        <input type="submit" id="new-todo-submit" onsmit="return false">
       </form>
     </div>
   </div>

@@ -23,14 +23,37 @@ const dataBase = (function() {
 
 //responsible for manipulating the dom
 const domStuff = (function() {
+  //main page query selectors
   const home = document.querySelector("#home");
   const today = document.querySelector("#today");
   const week = document.querySelector("#week");
   const newProject = document.querySelector("#new-project");
   const mainPanel = document.querySelector(".main-panel");
-  const newTodoContainer = document.querySelector(".new-todo");
-  const closeNewToDo = document.querySelector(".close-new-todo");
 
+  //add task query selectors
+  const newTaskContainer = document.querySelector(".new-task");
+
+  newTaskContainer.addEventListener("click", (e) => {
+    if (e.target === newTaskContainer) newTaskContainer.classList.remove('show');
+  });
+
+  const closeNewTask = document.querySelector(".close-new-task").addEventListener("click", () => {
+    newTaskContainer.classList.remove('show');
+  });
+
+  const newTaskForm = document.querySelector("#new-task").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const taskTitle = document.querySelector("#task-title").value;
+    const description = document.querySelector("#description").value;
+    const dueDate = document.querySelector("#due-date").value;
+    const priority = document.querySelector("#priority").value;
+    const project = document.querySelector("#project").value;
+    console.log(taskTitle, description, dueDate, priority, project);
+    return false;
+  })
+
+
+  //main page event listeners
   home.addEventListener("click", () => {
     renderContent("Home");
   });
@@ -49,24 +72,22 @@ const domStuff = (function() {
 
   mainPanel.addEventListener("click", e => {
     if(e.target.matches("#add-task")) {
-      triggerModalContainer();
+      triggerModalContainer(newTaskContainer);
     }
   });
 
-  newTodoContainer.addEventListener("click", (e) => {
-    if (e.target === newTodoContainer) newTodoContainer.classList.remove('show');
-  });
+  
+  
 
-  closeNewToDo.addEventListener("click", () => newTodoContainer.classList.remove('show'));
-
+  const triggerModalContainer = modal => {
+    modal.classList.add("show");
+  }
 
   const appendToDo = () => {
 
   }
 
-  const triggerModalContainer = () => {
-    newTodoContainer.classList.add("show");
-  }
+  
 
   const renderContent = (h2) => {
     mainPanel.innerHTML = `
@@ -87,5 +108,3 @@ const app = (function() {
 
   return {}
 })();
-
-console.log("hello world");

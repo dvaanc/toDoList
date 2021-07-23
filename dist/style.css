@@ -99,7 +99,7 @@ main {
   cursor: pointer;
 }
 
-.new-todo {
+.new-task {
   opacity: 0;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
@@ -119,7 +119,7 @@ main {
   pointer-events: auto;
 }
 
-.new-todo-content {
+.new-task-content {
   background-color: #fff;
   border-radius: 5px;
   padding: 20px 40px;
@@ -127,7 +127,7 @@ main {
   max-width: 100%;
 }
 
-.close-new-todo { 
+.close-new-task { 
   position: relative;
   left: 520px;
   top: -10px;
@@ -135,7 +135,7 @@ main {
   border-radius: 50%;
 }
 
-.close-new-todo:hover {
+.close-new-task:hover {
   cursor: pointer;
   border-radius: 50%;
   width: 7px;
@@ -181,7 +181,7 @@ select:focus {
   outline: none;
 }
 
-#submit {
+input[type=submit] {
   display: flex;
   margin: 0 auto;
   height: 40px;
@@ -196,7 +196,7 @@ select:focus {
   font-size: 18px;
 }
 
-#submit:hover {
+input[type=submit]:hover {
   cursor: pointer;
 }
 
