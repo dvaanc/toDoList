@@ -1,24 +1,40 @@
 //factory func that makes to-dos
-const toDoFactory = (function(title, description, dueDate, priority, checked) {
-  this.title = title;
-  this.description = description;
-  this.dueDate = dueDate;
-  this.priority = priority;
-  this.checked = checked;
-})();
+const taskFactory = (title, description, dueDate, priority, checked, project) => {
+  const task = {
+    title, 
+    description, 
+    dueDate, 
+    priority, 
+    checked,
+    project
+  }
+
+  return task;
+};
+
+const projectFactory = (name) => {
+  this.name = name;
+}
 
 
 
 //holds all data
 const dataBase = (function() {
-  let toDoData = [];
+  let taskData = [];
+  let projectData = [];
 
-  const pushToDo = (title, description, dueDate, priority, checked) => {
-    const toDo = toDoFactory(title, description, dueDate, priority, checked);
-    toDoData.push(toDo);
+  const pushTask = (title, description, dueDate, priority, checked, project) => {
+    const newTask = taskFactory(title, description, dueDate, priority, checked, project);
+    taskData.push(newTask);
   }
 
-  return { pushToDo };
+  const pushProject = (name) => {
+    const project = projectFactory(name);
+    projectData.push(project);
+  }
+
+
+  return { pushTask, pushProject, taskData };
 })();
 
 //responsible for manipulating the dom
@@ -49,7 +65,8 @@ const domStuff = (function() {
     const priority = document.querySelector("#priority").value;
     const project = document.querySelector("#project").value;
     console.log(taskTitle, description, dueDate, priority, project);
-    return false;
+    app.pushContent(taskTitle, description, dueDate, priority, project);
+
   })
 
 
@@ -83,8 +100,12 @@ const domStuff = (function() {
     modal.classList.add("show");
   }
 
-  const appendToDo = () => {
-
+  const renderTask = (taskTitle, description, dueDate, priority, project) => {
+    const task = document.createElement("div")
+    task.classList.add("task");
+    const div = document.createElement("div");
+    const input = document.createElement("input");
+    const p = document.createElement("p");
   }
 
   
@@ -101,10 +122,11 @@ const domStuff = (function() {
 
 //magic stuff happens here
 const app = (function() {
-  const addToDo = () => {
-
+  const pushContent = (taskTitle, description, dueDate, priority, project) => {
+    dataBase.pushTask(taskTitle, description, dueDate, priority, project);
+    console.log(dataBase.taskData);
   }
 
 
-  return {}
+  return { pushContent }
 })();
