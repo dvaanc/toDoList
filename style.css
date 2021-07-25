@@ -123,6 +123,14 @@ main {
   cursor: pointer;
 }
 
+#delete-task {
+  font-size: 18px;
+}
+
+#delete-task:hover {
+  color: red;
+}
+
 .new-task {
   opacity: 0;
   pointer-events: none;
