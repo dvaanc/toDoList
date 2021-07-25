@@ -1,7 +1,7 @@
 //factory func that makes to-dos
-const taskFactory = (title, description, dueDate, priority, checked, project) => {
+const taskFactory = (title, description, dueDate, priority, checked = false, project) => {
   const task = {
-    title, 
+    title,
     description, 
     dueDate, 
     priority, 
@@ -13,7 +13,7 @@ const taskFactory = (title, description, dueDate, priority, checked, project) =>
 };
 
 const projectFactory = (name) => {
-  this.name = name;
+  return name;
 }
 
 
@@ -24,8 +24,8 @@ const dataBase = (function() {
   let projectData = [];
 
   const pushTask = (title, description, dueDate, priority, checked, project) => {
-    const newTask = taskFactory(title, description, dueDate, priority, checked, project);
-    taskData.push(newTask);
+    const task = taskFactory(title, description, dueDate, priority, checked, project);
+    taskData.push(task);
   }
 
   const pushProject = (name) => {
@@ -33,6 +33,9 @@ const dataBase = (function() {
     projectData.push(project);
   }
 
+  const deleteTask = () => {
+
+  }
 
   return { pushTask, pushProject, taskData };
 })();
@@ -44,13 +47,17 @@ const domStuff = (function() {
   const today = document.querySelector("#today");
   const week = document.querySelector("#week");
   const newProject = document.querySelector("#new-project");
-  const mainPanel = document.querySelector(".main-panel");
+  const contentContainer = document.querySelector(".content-container");
 
   //add task query selectors
   const newTaskContainer = document.querySelector(".new-task");
 
   newTaskContainer.addEventListener("click", (e) => {
     if (e.target === newTaskContainer) newTaskContainer.classList.remove('show');
+    if (e.target.hasAttribute('delete-task')) {
+
+    }
+
   });
 
   const closeNewTask = document.querySelector(".close-new-task").addEventListener("click", () => {
@@ -64,15 +71,14 @@ const domStuff = (function() {
     const dueDate = document.querySelector("#due-date").value;
     const priority = document.querySelector("#priority").value;
     const project = document.querySelector("#project").value;
-    console.log(taskTitle, description, dueDate, priority, project);
-    app.pushContent(taskTitle, description, dueDate, priority, project);
+    app.logic(taskTitle, description, dueDate, priority, project);
 
   })
 
 
   //main page event listeners
   home.addEventListener("click", () => {
-    renderContent("Home");
+    render("Hi");
   });
 
   today.addEventListener("click", () => {
@@ -87,7 +93,7 @@ const domStuff = (function() {
 
   });
 
-  mainPanel.addEventListener("click", e => {
+  contentContainer.addEventListener("click", e => {
     if(e.target.matches("#add-task")) {
       triggerModalContainer(newTaskContainer);
     }
@@ -99,34 +105,63 @@ const domStuff = (function() {
   const triggerModalContainer = modal => {
     modal.classList.add("show");
   }
-
-  const renderTask = (taskTitle, description, dueDate, priority, project) => {
-    const task = document.createElement("div")
-    task.classList.add("task");
-    const div = document.createElement("div");
-    const input = document.createElement("input");
-    const p = document.createElement("p");
+  
+  const task = (title, index, dueDate) => {
+    const task = document.createElement("div");
+      task.classList.add("task")
+      task.innerHTML = `
+      <div>
+      <input type="checkbox" name="" id="${index}">
+      <p>${title}</p>
+    </div>
+    <div>
+      <p>${dueDate}</p>
+      <span id="delete-task">&times;</span>
+      </div>
+      `;
+      contentContainer.appendChild(task);
   }
 
-  
+  const render = (heading) => {
+    // mainPanel.innerHTML = `
+    //   <h2>${h2}</h2>
+    //   <div id="add-task" class="task">+ Add Task</div>
+    // `;
+    const h2 = document.createElement("h2");
+      h2.innerText = heading;
+    const addTask = document.createElement("div");
+      addTask.setAttribute("id", "add-task");
+      addTask.classList.add("task");
+      addTask.innerText = "+ Add Task";
+    contentContainer.appendChild(h2);
+    contentContainer.appendChild(addTask);
 
-  const renderContent = (h2) => {
-    mainPanel.innerHTML = `
-      <h2>${h2}</h2>
-      <div id="add-task" class="task">+ Add Task</div>
-    `;
   }
   
-
+  return { render, task }
 })();
 
 //magic stuff happens here
 const app = (function() {
-  const pushContent = (taskTitle, description, dueDate, priority, project) => {
+  const logic = (taskTitle, description, dueDate, priority, project) => {
     dataBase.pushTask(taskTitle, description, dueDate, priority, project);
     console.log(dataBase.taskData);
+    idk();
   }
 
+  const idk = () => {
+    dataBase.taskData.forEach(item => {
+      domStuff.task(item.title, item.dueDate, dataBase.taskData.indexOf(item));
+    })
+  }
 
-  return { pushContent }
+  // add function that loops through taskData and renders content on page, if content is to be rendered on a project, filter out objects in taskData that contain the corresponding project name. 
+
+  // weekly/today function that filters out taskData based on due date
+
+  // project function that loops through projectData and refreshes projects on page (when user deletes project)
+
+  // when user deletes a project run a function that takes in project name as a parameter, loop through taskData and delete tasks with corresponding project name
+
+  return { logic }
 })();
