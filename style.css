@@ -80,6 +80,7 @@ main {
 .main-panel {
   display: flex;
   background-color: #EEEEEE;
+  flex-direction: column;
   height: 100%;
   width: 85vw;
   padding: 30px;
@@ -89,7 +90,7 @@ main {
   display: flex;
   flex-direction: column;
   width: 600px;
-  height: 100%;
+  height: auto;
 }
 
 .task {
