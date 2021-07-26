@@ -1,11 +1,10 @@
 //factory func that makes to-dos
-const taskFactory = (title, description, dueDate, priority, checked = false, project) => {
+const taskFactory = (title, description, dueDate, priority, project) => {
   const task = {
     title,
     description, 
     dueDate, 
     priority, 
-    checked,
     project
   }
 
@@ -23,8 +22,8 @@ const dataBase = (function() {
   let taskData = [];
   let projectData = [];
 
-  const pushTask = (title, description, dueDate, priority, checked, project) => {
-    const task = taskFactory(title, description, dueDate, priority, checked, project);
+  const pushTask = (title, description, dueDate, priority, project) => {
+    const task = taskFactory(title, description, dueDate, priority, project);
     taskData.push(task);
   }
 
@@ -48,6 +47,7 @@ const domStuff = (function() {
   const week = document.querySelector("#week");
   const newProject = document.querySelector("#new-project");
   const contentContainer = document.querySelector(".content-container");
+  const mainPanel = document.querySelector(".main-panel");
 
   //add task query selectors
   const newTaskContainer = document.querySelector(".new-task");
@@ -72,13 +72,15 @@ const domStuff = (function() {
     const priority = document.querySelector("#priority").value;
     const project = document.querySelector("#project").value;
     app.logic(taskTitle, description, dueDate, priority, project);
+    newTaskContainer.classList.remove("show");
 
   })
 
 
   //main page event listeners
   home.addEventListener("click", () => {
-    render("Hi");
+    render("Home");
+    app.idk();
   });
 
   today.addEventListener("click", () => {
@@ -99,8 +101,6 @@ const domStuff = (function() {
     }
   });
 
-  
-  
 
   const triggerModalContainer = modal => {
     modal.classList.add("show");
@@ -119,7 +119,7 @@ const domStuff = (function() {
       <span id="delete-task">&times;</span>
       </div>
       `;
-      contentContainer.appendChild(task);
+      contentContainer.insertBefore(task, contentContainer.firstElementChild.nextSibling);
   }
 
   const render = (heading) => {
@@ -133,9 +133,15 @@ const domStuff = (function() {
       addTask.setAttribute("id", "add-task");
       addTask.classList.add("task");
       addTask.innerText = "+ Add Task";
-    contentContainer.appendChild(h2);
-    contentContainer.appendChild(addTask);
+    mainPanel.innerHTML = "";
+    mainPanel.appendChild(h2);
+    mainPanel.appendChild(addTask);
+    // h2.parentNode.insertBefore(addTask, h2.nextSibling);
 
+  }
+
+  const clearContent = () => {
+    contentContainer.innerHTML = "";
   }
   
   return { render, task }
@@ -145,13 +151,13 @@ const domStuff = (function() {
 const app = (function() {
   const logic = (taskTitle, description, dueDate, priority, project) => {
     dataBase.pushTask(taskTitle, description, dueDate, priority, project);
-    console.log(dataBase.taskData);
     idk();
+    console.log(dataBase.taskData);
   }
 
   const idk = () => {
     dataBase.taskData.forEach(item => {
-      domStuff.task(item.title, item.dueDate, dataBase.taskData.indexOf(item));
+      domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate);
     })
   }
 
@@ -163,5 +169,5 @@ const app = (function() {
 
   // when user deletes a project run a function that takes in project name as a parameter, loop through taskData and delete tasks with corresponding project name
 
-  return { logic }
+  return { logic, idk }
 })();
