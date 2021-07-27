@@ -41,22 +41,19 @@ const dataBase = (function() {
 
 //responsible for manipulating the dom
 const domStuff = (function() {
-  //main page query selectors
+  //side panel
+  const sidePanel = document.querySelector(".side-panel");
   const home = document.querySelector("#home");
   const today = document.querySelector("#today");
   const week = document.querySelector("#week");
-  const newProject = document.querySelector("#new-project");
-  const taskContainer = document.querySelector(".task-container");
+  //main panel 
   const mainPanel = document.querySelector(".main-panel");
+  const taskContainer = document.querySelector(".task-container");
+  //modals that popup when clicked 
+  const newProjectModal = document.querySelector(".new-project");
   const newTaskModal = document.querySelector(".new-task");
 
-  //add task query selectors
-  newTaskModal.addEventListener("click", (e) => {
-    if (e.target === newTaskModal) newTaskModal.classList.remove("show");
-    if (e.target.matches(".close-new-task")) newTaskModal.classList.remove("show");
-  });
-
-  //main page event listeners
+  //renders tasks and filters out tasks(today, week)
   home.addEventListener("click", () => {
     render("Home");
     clearContent();
@@ -71,22 +68,37 @@ const domStuff = (function() {
 
   });
 
-  newProject.addEventListener("click", () => {
+  //triggers newProjectModal when + new project button is pressed on side panel
+  sidePanel.addEventListener("click", e => {
+    if(e.target.matches("#new-project-button")) {
+      triggerModalContainer(newProjectModal);
+    }
+  })
 
+  mainPanel.addEventListener("click", e => {
+    if(e.target.matches("#add-task")) triggerModalContainer(newTaskModal);
+  
+    if(e.target.matches(".task")) editTask();
+  })
+
+  newTaskModal.addEventListener("click", (e) => {
+    if(e.target === newTaskModal) newTaskModal.classList.remove("show");
+    if(e.target.matches(".close-new-task")) newTaskModal.classList.remove("show");
   });
 
+  newProjectModal.addEventListener("click", (e) => {
+    if(e.target === newProjectModal) newProjectModal.classList.remove("show");
+    if(e.target.matches(".close-new-project")) newProjectModal.classList.remove("show");
+  });
+
+
+  //main page event listeners
   taskContainer.addEventListener("click", e => {
     if(e.target.matches('#delete-task')) {
       const taskIndex = e.target.parentNode.parentNode.dataset.index;
       dataBase.deleteTask(taskIndex)
       e.target.parentNode.parentNode.remove();
     }
-  });
-
-  mainPanel.addEventListener("click", e => {
-    if(e.target.matches("#add-task")) {
-      triggerModalContainer(newTaskModal);
-    };
   })
 
   const newTaskForm = document.querySelector("#new-task").addEventListener("submit", (e) => {
@@ -95,31 +107,13 @@ const domStuff = (function() {
     const description = document.querySelector("#description").value;
     const dueDate = document.querySelector("#due-date").value;
     const priority = document.querySelector("#priority").value;
-    const project = document.querySelector("#project").value;
+    const project = document.querySelector("#project-select").value;
     app.logic(taskTitle, description, dueDate, priority, project);
     newTaskModal.classList.remove("show");
   });
 
-
   const triggerModalContainer = modal => {
     modal.classList.add("show");
-  }
-  
-  const task = (title, index, dueDate) => {
-    const task = document.createElement("div");
-      task.classList.add("task")
-      task.innerHTML = `
-      <div>
-      <input type="checkbox" name="" data-index="${index}">
-      <p>${title}</p>
-    </div>
-    <div>
-      <p>${dueDate}</p>
-      <span id="delete-task">&times;</span>
-      </div>
-      `;
-      taskContainer.appendChild(task);
-      // taskContainer.insertBefore(task, taskContainer.firstElementChild.nextSibling);
   }
 
   const render = (heading) => {
@@ -140,7 +134,32 @@ const domStuff = (function() {
     // h2.parentNode.insertBefore(addTask, h2.nextSibling);
 
   }
+  
+  const task = (title, index, dueDate) => {
+    const task = document.createElement("div");
+      task.classList.add("task")
+      task.innerHTML = `
+      <div>
+      <input type="checkbox" name="" data-index="${index}">
+      <p>${title}</p>
+    </div>
+    <div>
+      <p>${dueDate}</p>
+      <span id="delete-task">&times;</span>
+      </div>
+      `;
+      taskContainer.appendChild(task);
+      // taskContainer.insertBefore(task, taskContainer.firstElementChild.nextSibling);
+  }
 
+  // const editTask = (title, description, dueDate, priority, project) => {
+  //   e.preventDefault();
+
+  // }
+
+  const viewTask = () => {
+    
+  }
   const clearContent = () => {
     taskContainer.innerHTML = "";
   }

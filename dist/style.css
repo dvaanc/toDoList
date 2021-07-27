@@ -93,7 +93,7 @@ main {
   height: auto;
 }
 
-.task {
+.task, .add-task {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -106,20 +106,20 @@ main {
   user-select: none;
 }
 
-.task input {
+.task input, .add-task {
   margin-right: 8px;
 }
 
-.task p {
+.task p, .add-task {
   margin-right: 10px;
 }
 
-.task div {
+.task div, .add-task {
   display: flex;
   flex-direction: row;
 }
 
-.task:hover {
+.task:hover, .add-task:hover {
   background-color: #CCCCCC;
   cursor: pointer;
 }
@@ -137,7 +137,7 @@ main {
   justify-content: center;
 }
 
-.new-task {
+.new-task, .new-project, .view-task {
   opacity: 0;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
@@ -157,15 +157,16 @@ main {
   pointer-events: auto;
 }
 
-.new-task-content {
+.new-task-content, .new-project-content, .view-task-content {
   background-color: #fff;
   border-radius: 5px;
   padding: 20px 40px;
+  height: auto;
   width: 600px;
   max-width: 100%;
 }
 
-.close-new-task { 
+.close-new-task, .close-new-project, .close-view-task { 
   position: relative;
   left: 520px;
   top: -10px;
