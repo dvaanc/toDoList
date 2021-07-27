@@ -28,7 +28,7 @@
         <img src="images/week.png" alt="">
         <p>Week</p></div>
       <h2>Projects</h2>
-      <div id="new-project">
+      <div id="new-project-button">
         <img src="images/add.png" alt="">
         <p>new project</p>
       </div>
@@ -47,19 +47,19 @@
         </div>
       </div>
     </div>
-    <div id="add-task" class="task">+ Add Task</div>
+    <div id="add-task" class="add-task">+ Add Task</div>
   </main>
-  <!-- <div class="modal-container">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
+  <div class="new-project">
+    <div class="new-project-content">
+      <span class="close-new-project">&times;</span>
       <h2>New Project</h2>
       <form id="add-project" action="">
         <label for="name"><p>Name:</p></label>
-        <input class="input-field" type="text" id="project" placeholder="Fitness">
+        <input class="input-field" type="text" id="project-select" required>
         <input type="submit" id="submit">
       </form>
     </div>
-  </div> -->
+  </div>
   <div class="new-task">
     <div class="new-task-content">
       <span class="close-new-task">&times;</span>
@@ -90,8 +90,14 @@
       </form>
     </div>
   </div>
-
-      </div>
+  <div class="view-task">
+    <div class="view-task-content">
+      <span class="close-view-task">&times;</span>
+      <h2 id="view-task-title">Task title</h2>
+      <p>Due: <span id="view-task-dueDate"></span></p>
+      <p>Project: <span id="view-task-project"></span></p>
+      <p>Description: <span id="view-task-description"></span></p>
+    </div>
   </div>
   <footer>
     <p>Copyright © 2021. Web Design by dvaanc.</p>
