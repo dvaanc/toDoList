@@ -86,7 +86,7 @@ main {
   padding: 30px;
 }
 
-.content-container {
+.task-container {
   display: flex;
   flex-direction: column;
   width: 600px;
@@ -132,6 +132,11 @@ main {
   color: red;
 }
 
+#add-task {
+  width: 600px;
+  justify-content: center;
+}
+
 .new-task {
   opacity: 0;
   pointer-events: none;
@@ -166,6 +171,7 @@ main {
   top: -10px;
   font-size: 30px;
   border-radius: 50%;
+  user-select: none;
 }
 
 .close-new-task:hover {
