@@ -11,8 +11,8 @@ const taskFactory = (title, description, dueDate, priority, project) => {
   return task;
 };
 
-const projectFactory = (name) => {
-  return name;
+const projectFactory = (title) => {
+  return title;
 }
 
 
@@ -27,8 +27,8 @@ const dataBase = (function() {
     taskData.push(task);
   }
 
-  const pushProject = (name) => {
-    const project = projectFactory(name);
+  const pushProject = (title) => {
+    const project = projectFactory(title);
     projectData.push(project);
   }
 
@@ -36,7 +36,11 @@ const dataBase = (function() {
     taskData.splice(index, 1);
   }
 
-  return { pushTask, pushProject, taskData , deleteTask};
+  const deleteProject = (index) => {
+    projectData.splice(index, 1);
+  }
+
+  return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject};
 })();
 
 //responsible for manipulating the dom
@@ -46,6 +50,8 @@ const domStuff = (function() {
   const home = document.querySelector("#home");
   const today = document.querySelector("#today");
   const week = document.querySelector("#week");
+  const addProjectButton = document.querySelector("#new-project-button");
+  const projectContainer = document.querySelector(".new-project");
   //main panel 
   const mainPanel = document.querySelector(".main-panel");
   const taskContainer = document.querySelector(".task-container");
@@ -57,7 +63,7 @@ const domStuff = (function() {
   home.addEventListener("click", () => {
     render("Home");
     clearContent();
-    app.loopTaskData();
+    app.grabTaskData();
   });
 
   today.addEventListener("click", () => {
@@ -101,16 +107,24 @@ const domStuff = (function() {
     }
   })
 
-  const newTaskForm = document.querySelector("#new-task").addEventListener("submit", (e) => {
+  const newTaskForm = document.querySelector("#new-task").addEventListener("submit", e => {
     e.preventDefault();
     const taskTitle = document.querySelector("#task-title").value;
     const description = document.querySelector("#description").value;
     const dueDate = document.querySelector("#due-date").value;
     const priority = document.querySelector("#priority").value;
     const project = document.querySelector("#project-select").value;
-    app.logic(taskTitle, description, dueDate, priority, project);
+    app.loadTask(taskTitle, description, dueDate, priority, project);
     newTaskModal.classList.remove("show");
   });
+
+  const newProjectForm = document.querySelector("#add-project").addEventListener("submit", e => {
+    e.preventDefault();
+    const projectTitle = document.querySelector("#project-title").value;
+    app.loadProject(projectTitle);
+    projectContainer.classList.remove("show");
+
+  })
 
   const triggerModalContainer = modal => {
     modal.classList.add("show");
@@ -157,32 +171,78 @@ const domStuff = (function() {
 
   // }
 
+  const project = (title, index) => {
+    const project = document.createElement("div");
+      project.innerHTML = `
+      <div data-index="${index}">
+        <p>${title}</p>
+      </div>
+      `;
+    sidePanel.appendChild(project);
+  }
+
   const viewTask = () => {
     
   }
+
+  const editTask = () => {
+    
+  }
+
   const clearContent = () => {
     taskContainer.innerHTML = "";
   }
   
-  return { render, task, clearContent }
+  return { render, task, project, clearContent }
 })();
 
 //magic stuff happens here
 const app = (function() {
-  const logic = (taskTitle, description, dueDate, priority, project) => {
-    dataBase.pushTask(taskTitle, description, dueDate, priority, project);
+  const loadTask = (taskTitle, description, dueDate, priority, project) => {
+    pushTask(taskTitle, description, dueDate, priority, project);
     domStuff.clearContent();
-    loopTaskData();
+    grabTaskData();
  
     console.log(dataBase.taskData);
   }
 
-  const loopTaskData = () => {
+  const pushTask = (taskTitle, description, dueDate, priority, project) => {
+    dataBase.pushTask(taskTitle, description, dueDate, priority, project);
+  }
+
+  const grabTaskData = () => {
     dataBase.taskData.forEach(item => {
       domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate);
     })
   }
 
+  const loadProject = (title) => {
+    dataBase.pushProject(title);
+    domStuff.clearContent();
+    grabProjectData();
+  }
+
+  const grabProjectData = () => {
+    dataBase.projectData.forEach(item => {
+      domStuff.project(item.title, dataBase.projectData.indexOf(item));
+    })
+  }
+
+  const sortByWeek = () => {
+
+  }
+
+  const sortByToday = () => {
+    
+  }
+
+  const refreshProjects = () => {
+
+  }
+
+  const editTask = () => {
+
+  }
   // add function that loops through taskData and renders content on page, if content is to be rendered on a project, filter out objects in taskData that contain the corresponding project name. 
 
   // weekly/today function that filters out taskData based on due date
@@ -191,5 +251,5 @@ const app = (function() {
 
   // when user deletes a project run a function that takes in project name as a parameter, loop through taskData and delete tasks with corresponding project name
 
-  return { logic, loopTaskData }
+  return { loadTask, loadProject, grabProjectData, grabTaskData }
 })();
