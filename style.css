@@ -164,6 +164,7 @@ main {
   height: auto;
   width: 600px;
   max-width: 100%;
+  user-select: none;
 }
 
 .close-new-task, .close-new-project, .close-view-task { 
