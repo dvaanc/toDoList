@@ -12,7 +12,7 @@ const taskFactory = (title, description, dueDate, priority, project) => {
 };
 
 const projectFactory = (title) => {
-  return title;
+  return { title };
 }
 
 
@@ -50,7 +50,13 @@ const domStuff = (function() {
   const home = document.querySelector("#home");
   const today = document.querySelector("#today");
   const week = document.querySelector("#week");
-  const addProjectButton = document.querySelector("#new-project-button");
+  const addProjectButton = document.querySelector("#new-project-button").addEventListener("click", () => {
+    triggerModalContainer(newProjectModal);
+  })
+  const addTaskButton = document.querySelector("#add-task").addEventListener("click", () => {
+    app.addProjectOptions();
+    triggerModalContainer(newTaskModal);
+  })
   const projectContainer = document.querySelector(".new-project");
   //main panel 
   const mainPanel = document.querySelector(".main-panel");
@@ -58,6 +64,7 @@ const domStuff = (function() {
   //modals that popup when clicked 
   const newProjectModal = document.querySelector(".new-project");
   const newTaskModal = document.querySelector(".new-task");
+  const projectOptions = document.querySelector("#project-options");
 
   //renders tasks and filters out tasks(today, week)
   home.addEventListener("click", () => {
@@ -77,7 +84,11 @@ const domStuff = (function() {
   //triggers newProjectModal when + new project button is pressed on side panel
   sidePanel.addEventListener("click", e => {
     if(e.target.matches("#new-project-button")) {
-      triggerModalContainer(newProjectModal);
+   
+    }
+    if(e.target.matches(".project")) {
+      clearContent("taskContainer");
+      app.filterTask();
     }
   })
 
@@ -171,12 +182,21 @@ const domStuff = (function() {
 
   // }
 
+  const addProjectOptions = (project) => {
+    const option = document.createElement("option");
+      option.setAttribute("value", project);
+      option.innerText = project;
+      projectOptions.appendChild(option);
+
+  }
+
   const project = (title, index) => {
     const project = document.createElement("div");
+      project.classList.add("project")
+      project.setAttribute("data-index", index);
       project.innerHTML = `
-      <div data-index="${index}">
         <p>${title}</p>
-      </div>
+
       `;
     sidePanel.appendChild(project);
   }
@@ -189,18 +209,26 @@ const domStuff = (function() {
     
   }
 
-  const clearContent = () => {
-    taskContainer.innerHTML = "";
+  const clearContent = (contentType) => {
+    switch(contentType) {
+      case "taskContainer":
+        taskContainer.innerHTML = "";
+        break;
+      case "projectOptions":
+        projectOptions.innerHTML = "";
+        break;
+    };
+  
   }
   
-  return { render, task, project, clearContent }
+  return { render, task, project, clearContent, addProjectOptions }
 })();
 
 //magic stuff happens here
 const app = (function() {
   const loadTask = (taskTitle, description, dueDate, priority, project) => {
     pushTask(taskTitle, description, dueDate, priority, project);
-    domStuff.clearContent();
+    domStuff.clearContent("taskContainer");
     grabTaskData();
  
     console.log(dataBase.taskData);
@@ -218,13 +246,26 @@ const app = (function() {
 
   const loadProject = (title) => {
     dataBase.pushProject(title);
-    domStuff.clearContent();
+    domStuff.clearContent("taskContainer");
     grabProjectData();
   }
 
   const grabProjectData = () => {
     dataBase.projectData.forEach(item => {
       domStuff.project(item.title, dataBase.projectData.indexOf(item));
+    })
+  }
+
+  const filterTask = (projectTitle) => {
+   const filteredTasks = dataBase.taskData.filter(item => item === projectTitle);
+    filteredTasks.forEach(item => {
+      domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate);
+    })
+  }
+
+  const addProjectOptions = () => {
+    dataBase.projectData.forEach(item => {
+      domStuff.addProjectOptions(item);
     })
   }
 
@@ -251,5 +292,5 @@ const app = (function() {
 
   // when user deletes a project run a function that takes in project name as a parameter, loop through taskData and delete tasks with corresponding project name
 
-  return { loadTask, loadProject, grabProjectData, grabTaskData }
+  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions }
 })();
