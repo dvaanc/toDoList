@@ -61,6 +61,7 @@ const domStuff = (function() {
   //main panel 
   const mainPanel = document.querySelector(".main-panel");
   const taskContainer = document.querySelector(".task-container");
+  const projectList = document.querySelector("#project-list")
   //modals that popup when clicked 
   const newProjectModal = document.querySelector(".new-project");
   const newTaskModal = document.querySelector(".new-task");
@@ -69,7 +70,7 @@ const domStuff = (function() {
   //renders tasks and filters out tasks(today, week)
   home.addEventListener("click", () => {
     render("Home");
-    clearContent();
+    clearContent("taskContainer");
     app.grabTaskData();
   });
 
@@ -83,18 +84,15 @@ const domStuff = (function() {
 
   //triggers newProjectModal when + new project button is pressed on side panel
   sidePanel.addEventListener("click", e => {
-    if(e.target.matches("#new-project-button")) {
-   
-    }
+  
     if(e.target.matches(".project")) {
       clearContent("taskContainer");
-      app.filterTask();
+      app.filterTask(e.target.innerText);
     }
   })
 
   mainPanel.addEventListener("click", e => {
     if(e.target.matches("#add-task")) triggerModalContainer(newTaskModal);
-  
     if(e.target.matches(".task")) editTask();
   })
 
@@ -124,7 +122,7 @@ const domStuff = (function() {
     const description = document.querySelector("#description").value;
     const dueDate = document.querySelector("#due-date").value;
     const priority = document.querySelector("#priority").value;
-    const project = document.querySelector("#project-select").value;
+    const project = document.querySelector("#project-options").value;
     app.loadTask(taskTitle, description, dueDate, priority, project);
     newTaskModal.classList.remove("show");
   });
@@ -192,13 +190,13 @@ const domStuff = (function() {
 
   const project = (title, index) => {
     const project = document.createElement("div");
-      project.classList.add("project")
+      project.classList.add("project");
       project.setAttribute("data-index", index);
       project.innerHTML = `
         <p>${title}</p>
 
       `;
-    sidePanel.appendChild(project);
+    projectList.appendChild(project);
   }
 
   const viewTask = () => {
@@ -216,6 +214,9 @@ const domStuff = (function() {
         break;
       case "projectOptions":
         projectOptions.innerHTML = "";
+        break;
+      case "projectList":
+        projectList.innerHTML = "";
         break;
     };
   
@@ -246,7 +247,9 @@ const app = (function() {
 
   const loadProject = (title) => {
     dataBase.pushProject(title);
+    console.log(dataBase.projectData);
     domStuff.clearContent("taskContainer");
+    domStuff.clearContent("projectList")
     grabProjectData();
   }
 
@@ -257,15 +260,16 @@ const app = (function() {
   }
 
   const filterTask = (projectTitle) => {
-   const filteredTasks = dataBase.taskData.filter(item => item === projectTitle);
+   const filteredTasks = dataBase.taskData.filter(item => item.project === projectTitle);
     filteredTasks.forEach(item => {
       domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate);
     })
   }
 
   const addProjectOptions = () => {
+    domStuff.clearContent("projectOptions")
     dataBase.projectData.forEach(item => {
-      domStuff.addProjectOptions(item);
+      domStuff.addProjectOptions(item.title);
     })
   }
 
@@ -294,3 +298,5 @@ const app = (function() {
 
   return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions }
 })();
+
+console.log(dataBase.projectData);

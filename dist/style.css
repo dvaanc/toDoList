@@ -49,7 +49,7 @@ main {
   padding: 20px;
 }
 
-.side-panel div {
+.sidePanelButtons, .project {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,6 +60,7 @@ main {
   height: 30px;
   border-radius: 6px;
   user-select: none;
+  width: 100%;
 }
 
 .side-panel img {
@@ -74,6 +75,15 @@ main {
 .side-panel div:hover {
   background-color: #CCCCCC;
   cursor: pointer;
+}
+
+#project-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 100%;
 }
 
 
