@@ -66,11 +66,13 @@ const domStuff = (function() {
   const newProjectModal = document.querySelector(".new-project");
   const newTaskModal = document.querySelector(".new-task");
   const projectOptions = document.querySelector("#project-options");
+  const viewTaskModal = document.querySelector("#view-task");
 
   //renders tasks and filters out tasks(today, week)
   home.addEventListener("click", () => {
-    render("Home");
     clearContent("taskContainer");
+    clearContent("mainPanel");
+    render("Home");
     app.grabTaskData();
   });
 
@@ -84,16 +86,17 @@ const domStuff = (function() {
 
   //triggers newProjectModal when + new project button is pressed on side panel
   sidePanel.addEventListener("click", e => {
-  
-    if(e.target.matches(".project")) {
+    if(e.target.matches(".project") || e.target.matches(".projectText")) {
       clearContent("taskContainer");
+      clearContent("mainPanel");
+      render(e.target.innerText);
       app.filterTask(e.target.innerText);
     }
   })
 
   mainPanel.addEventListener("click", e => {
     if(e.target.matches("#add-task")) triggerModalContainer(newTaskModal);
-    if(e.target.matches(".task")) editTask();
+    if(e.target.matches(".task")) viewTask();
   })
 
   newTaskModal.addEventListener("click", (e) => {
@@ -101,10 +104,18 @@ const domStuff = (function() {
     if(e.target.matches(".close-new-task")) newTaskModal.classList.remove("show");
   });
 
-  newProjectModal.addEventListener("click", (e) => {
+  newProjectModal.addEventListener("click", e => {
     if(e.target === newProjectModal) newProjectModal.classList.remove("show");
     if(e.target.matches(".close-new-project")) newProjectModal.classList.remove("show");
   });
+
+  viewTaskModal.addEventListener("click", e => {
+    if(e.target == viewTaskModal) viewTaskModal.classList.remove("show");
+    if(e.target.matches(".close-view-task")) viewTaskModal.classList.remove("show");
+  })
+  const viewTask = () => {
+    
+  }
 
 
   //main page event listeners
@@ -116,6 +127,7 @@ const domStuff = (function() {
     }
   })
 
+  
   const newTaskForm = document.querySelector("#new-task").addEventListener("submit", e => {
     e.preventDefault();
     const taskTitle = document.querySelector("#task-title").value;
@@ -131,6 +143,7 @@ const domStuff = (function() {
     e.preventDefault();
     const projectTitle = document.querySelector("#project-title").value;
     app.loadProject(projectTitle);
+    app.addProjectOptions();
     projectContainer.classList.remove("show");
 
   })
@@ -193,15 +206,13 @@ const domStuff = (function() {
       project.classList.add("project");
       project.setAttribute("data-index", index);
       project.innerHTML = `
-        <p>${title}</p>
+        <p class="projectText">${title}</p>
 
       `;
     projectList.appendChild(project);
   }
 
-  const viewTask = () => {
-    
-  }
+
 
   const editTask = () => {
     
@@ -209,6 +220,9 @@ const domStuff = (function() {
 
   const clearContent = (contentType) => {
     switch(contentType) {
+      case "mainPanel":
+        mainPanel.innerHTML = "";
+        break;
       case "taskContainer":
         taskContainer.innerHTML = "";
         break;
@@ -267,8 +281,9 @@ const app = (function() {
   }
 
   const addProjectOptions = () => {
-    domStuff.clearContent("projectOptions")
+    domStuff.clearContent("projectOptions");
     dataBase.projectData.forEach(item => {
+      console.log(item.title);
       domStuff.addProjectOptions(item.title);
     })
   }
