@@ -134,12 +134,16 @@ main {
   cursor: pointer;
 }
 
-#delete-task {
-  font-size: 18px;
+#delete-task, #edit-task{
+  border-radius: 50%;
 }
 
 #delete-task:hover {
-  color: red;
+  background-color: red;
+}
+
+#edit-task:hover {
+  background-color: #e2ba18;
 }
 
 #add-task {
@@ -186,7 +190,7 @@ main {
   user-select: none;
 }
 
-.close-new-task:hover {
+.close-new-task:hover, .close-new-project:hover, .close-view-task:hover {
   cursor: pointer;
   border-radius: 50%;
   width: 7px;
