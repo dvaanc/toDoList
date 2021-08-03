@@ -66,7 +66,27 @@ const domStuff = (function() {
   const newProjectModal = document.querySelector(".new-project");
   const newTaskModal = document.querySelector(".new-task");
   const projectOptions = document.querySelector("#project-options");
-  const viewTaskModal = document.querySelector("#view-task");
+
+  //modal that pops up when a task is clicked
+  const viewTaskModal = document.querySelector(".view-task");
+  const viewTaskTitle = document.querySelector("#view-task-title");
+  const viewTaskDueDate = document.querySelector("#view-task-dueDate");
+  const viewTaskProject = document.querySelector("#view-task-project");
+  const viewTaskDescription = document.querySelector("#view-task-description");
+  const viewTaskPriority = document.querySelector("#view-task-priority");
+
+  const viewTask = (task) => {
+    clearContent("viewTask");
+    const index = task
+    const data = dataBase.taskData[index];
+    viewTaskTitle.innerText = data.title;
+    viewTaskDescription.innerText = data.description;
+    viewTaskDueDate.innerText = data.dueDate;
+    viewTaskPriority.innerText = data.priority;
+    viewTaskProject.innerText = data.project;
+    viewTaskModal.classList.add("show");
+  }
+
 
   //renders tasks and filters out tasks(today, week)
   home.addEventListener("click", () => {
@@ -96,7 +116,7 @@ const domStuff = (function() {
 
   mainPanel.addEventListener("click", e => {
     if(e.target.matches("#add-task")) triggerModalContainer(newTaskModal);
-    if(e.target.matches(".task")) viewTask();
+    if(e.target.matches(".task")) viewTask(e.target.dataset.index);
   })
 
   newTaskModal.addEventListener("click", (e) => {
@@ -113,9 +133,6 @@ const domStuff = (function() {
     if(e.target == viewTaskModal) viewTaskModal.classList.remove("show");
     if(e.target.matches(".close-view-task")) viewTaskModal.classList.remove("show");
   })
-  const viewTask = () => {
-    
-  }
 
 
   //main page event listeners
@@ -161,7 +178,7 @@ const domStuff = (function() {
       h2.innerText = heading;
     const addTask = document.createElement("div");
       addTask.setAttribute("id", "add-task");
-      addTask.classList.add("task");
+      addTask.classList.add("add-task");
       addTask.innerText = "+ Add Task";
     mainPanel.innerHTML = "";
     mainPanel.appendChild(h2);
@@ -174,14 +191,16 @@ const domStuff = (function() {
   const task = (title, index, dueDate) => {
     const task = document.createElement("div");
       task.classList.add("task")
+      task.dataset.index = index;
       task.innerHTML = `
       <div>
-      <input type="checkbox" name="" data-index="${index}">
+      <input type="checkbox" name="" >
       <p>${title}</p>
     </div>
     <div>
       <p>${dueDate}</p>
-      <span id="delete-task">&times;</span>
+      <img src="images/edit.png" id="edit-task">
+      <img src="images/trash.png" id="delete-task">
       </div>
       `;
       taskContainer.appendChild(task);
@@ -232,6 +251,11 @@ const domStuff = (function() {
       case "projectList":
         projectList.innerHTML = "";
         break;
+      case "viewTask":
+        viewTaskTitle.innerText = "";
+        viewTaskDueDate.innerText = "";
+        viewTaskProject.innerText = "";
+        viewTaskDescription.innerText = "";
     };
   
   }
@@ -282,6 +306,7 @@ const app = (function() {
 
   const addProjectOptions = () => {
     domStuff.clearContent("projectOptions");
+    domStuff.addProjectOptions("N/A")
     dataBase.projectData.forEach(item => {
       console.log(item.title);
       domStuff.addProjectOptions(item.title);
