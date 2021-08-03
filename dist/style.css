@@ -151,7 +151,7 @@ main {
   justify-content: center;
 }
 
-.new-task, .new-project, .view-task {
+.new-task, .new-project, .view-task, .edit-task {
   opacity: 0;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
@@ -171,7 +171,7 @@ main {
   pointer-events: auto;
 }
 
-.new-task-content, .new-project-content, .view-task-content {
+.new-task-content, .new-project-content, .view-task-content, .edit-task-content {
   background-color: #fff;
   border-radius: 5px;
   padding: 20px 40px;
@@ -181,7 +181,7 @@ main {
   user-select: none;
 }
 
-.close-new-task, .close-new-project, .close-view-task { 
+.close-new-task, .close-new-project, .close-view-task, .close-edit-task { 
   position: relative;
   left: 520px;
   top: -10px;
@@ -190,7 +190,7 @@ main {
   user-select: none;
 }
 
-.close-new-task:hover, .close-new-project:hover, .close-view-task:hover {
+.close-new-task:hover, .close-new-project:hover, .close-view-task:hover, .close-edit-task:hover {
   cursor: pointer;
   border-radius: 50%;
   width: 7px;

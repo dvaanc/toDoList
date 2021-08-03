@@ -1,13 +1,16 @@
+
+import { isToday, isThisWeek, format } from 'date-fns';
+import { is } from 'date-fns/locale';
 //factory func that makes to-dos
 const taskFactory = (title, description, dueDate, priority, project) => {
+
   const task = {
     title,
     description, 
-    dueDate, 
+    dueDate,
     priority, 
     project
   }
-
   return task;
 };
 
@@ -58,13 +61,13 @@ const domStuff = (function() {
     triggerModalContainer(newTaskModal);
   })
   const projectContainer = document.querySelector(".new-project");
-  //main panel 
   const mainPanel = document.querySelector(".main-panel");
   const taskContainer = document.querySelector(".task-container");
   const projectList = document.querySelector("#project-list")
   //modals that popup when clicked 
   const newProjectModal = document.querySelector(".new-project");
   const newTaskModal = document.querySelector(".new-task");
+  const editTaskModal = document.querySelector(".edit-task");
   const projectOptions = document.querySelector("#project-options");
 
   //modal that pops up when a task is clicked
@@ -75,36 +78,9 @@ const domStuff = (function() {
   const viewTaskDescription = document.querySelector("#view-task-description");
   const viewTaskPriority = document.querySelector("#view-task-priority");
 
-  const viewTask = (task) => {
-    clearContent("viewTask");
-    const index = task
-    const data = dataBase.taskData[index];
-    viewTaskTitle.innerText = data.title;
-    viewTaskDescription.innerText = data.description;
-    viewTaskDueDate.innerText = data.dueDate;
-    viewTaskPriority.innerText = data.priority;
-    viewTaskProject.innerText = data.project;
-    viewTaskModal.classList.add("show");
-  }
+  const editTask = document.querySelector("#task-title");
 
 
-  //renders tasks and filters out tasks(today, week)
-  home.addEventListener("click", () => {
-    clearContent("taskContainer");
-    clearContent("mainPanel");
-    render("Home");
-    app.grabTaskData();
-  });
-
-  today.addEventListener("click", () => {
-
-  });
-
-  week.addEventListener("click", () => {
-
-  });
-
-  //triggers newProjectModal when + new project button is pressed on side panel
   sidePanel.addEventListener("click", e => {
     if(e.target.matches(".project") || e.target.matches(".projectText")) {
       clearContent("taskContainer");
@@ -113,6 +89,29 @@ const domStuff = (function() {
       app.filterTask(e.target.innerText);
     }
   })
+
+  home.addEventListener("click", () => {
+    clearContent("taskContainer");
+    clearContent("mainPanel");
+    render("Home");
+    app.addProjectOptions();
+    app.grabTaskData();
+  });
+
+  today.addEventListener("click", () => {
+    clearContent("taskContainer");
+    clearContent("mainPanel");
+    render("Target");
+    app.addProjectOptions();
+  });
+
+  week.addEventListener("click", () => {
+    clearContent("taskContainer");
+    clearContent("mainPanel");
+    render("This Week");
+    app.addProjectOptions();
+    app.sortByWeek();
+  });
 
   mainPanel.addEventListener("click", e => {
     if(e.target.matches("#add-task")) triggerModalContainer(newTaskModal);
@@ -144,15 +143,15 @@ const domStuff = (function() {
     }
   })
 
-  
   const newTaskForm = document.querySelector("#new-task").addEventListener("submit", e => {
     e.preventDefault();
     const taskTitle = document.querySelector("#task-title").value;
     const description = document.querySelector("#description").value;
     const dueDate = document.querySelector("#due-date").value;
+    const formattedDate = format(new Date(dueDate), "dd/MM/yyyy")
     const priority = document.querySelector("#priority").value;
     const project = document.querySelector("#project-options").value;
-    app.loadTask(taskTitle, description, dueDate, priority, project);
+    app.loadTask(taskTitle, description, formattedDate, priority, project);
     newTaskModal.classList.remove("show");
   });
 
@@ -162,18 +161,22 @@ const domStuff = (function() {
     app.loadProject(projectTitle);
     app.addProjectOptions();
     projectContainer.classList.remove("show");
-
   })
 
+  // const editTaskForm = document.querySelector("#edit-task").addEventListener("submit", e => {
+  //   e.preventDefault();
+  //   const taskTitle = document.querySelector("#task-title").value;
+  //   const description = document.querySelector("#description").value;
+  //   const dueDate = document.querySelector("#due-date").value;
+  //   const priority = document.querySelector("#priority").value;
+  //   const project = document.querySelector("#project-options").value;
+  //   editTaskModal.classList.remove("show");
+  // })
   const triggerModalContainer = modal => {
     modal.classList.add("show");
   }
 
   const render = (heading) => {
-    // mainPanel.innerHTML = `
-    //   <h2>${h2}</h2>
-    //   <div id="add-task" class="task">+ Add Task</div>
-    // `;
     const h2 = document.createElement("h2");
       h2.innerText = heading;
     const addTask = document.createElement("div");
@@ -184,8 +187,6 @@ const domStuff = (function() {
     mainPanel.appendChild(h2);
     mainPanel.appendChild(taskContainer);
     mainPanel.appendChild(addTask);
-    // h2.parentNode.insertBefore(addTask, h2.nextSibling);
-
   }
   
   const task = (title, index, dueDate) => {
@@ -212,6 +213,18 @@ const domStuff = (function() {
 
   // }
 
+  const viewTask = (task) => {
+    clearContent("viewTask");
+    const index = task
+    const data = dataBase.taskData[index];
+    viewTaskTitle.innerText = data.title;
+    viewTaskDescription.innerText = data.description;
+    viewTaskDueDate.innerText = data.dueDate;
+    viewTaskPriority.innerText = data.priority;
+    viewTaskProject.innerText = data.project;
+    viewTaskModal.classList.add("show");
+  }
+
   const addProjectOptions = (project) => {
     const option = document.createElement("option");
       option.setAttribute("value", project);
@@ -231,11 +244,6 @@ const domStuff = (function() {
     projectList.appendChild(project);
   }
 
-
-
-  const editTask = () => {
-    
-  }
 
   const clearContent = (contentType) => {
     switch(contentType) {
@@ -257,7 +265,6 @@ const domStuff = (function() {
         viewTaskProject.innerText = "";
         viewTaskDescription.innerText = "";
     };
-  
   }
   
   return { render, task, project, clearContent, addProjectOptions }
@@ -314,15 +321,14 @@ const app = (function() {
   }
 
   const sortByWeek = () => {
-
+    // const week = dataBase.taskData.filter(item => format(new Date(item.dueDate), "dd/MM/yyyy")) === isThisWeek()
+    const week = dataBase.taskData.filter(item => item.dueDate === isThisWeek(item.dueDate), {weekStartsOn: 1} )
+    // dataBase.taskData.forEach(item => console.log(format(new Date(item.dueDate), "dd/MM/yyyy")));
+    console.log(week);
   }
 
   const sortByToday = () => {
     
-  }
-
-  const refreshProjects = () => {
-
   }
 
   const editTask = () => {
@@ -336,7 +342,7 @@ const app = (function() {
 
   // when user deletes a project run a function that takes in project name as a parameter, loop through taskData and delete tasks with corresponding project name
 
-  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions }
+  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek }
 })();
 
 console.log(dataBase.projectData);
