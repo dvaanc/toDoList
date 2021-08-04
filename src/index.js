@@ -1,5 +1,5 @@
 
-import { isToday, isThisWeek, format } from 'date-fns';
+import { isToday, isThisWeek, format, parseISO, toDate } from 'date-fns';
 import { is } from 'date-fns/locale';
 //factory func that makes to-dos
 const taskFactory = (title, description, dueDate, priority, project) => {
@@ -103,6 +103,7 @@ const domStuff = (function() {
     clearContent("mainPanel");
     render("Target");
     app.addProjectOptions();
+    app.sortByToday();
   });
 
   week.addEventListener("click", () => {
@@ -148,10 +149,9 @@ const domStuff = (function() {
     const taskTitle = document.querySelector("#task-title").value;
     const description = document.querySelector("#description").value;
     const dueDate = document.querySelector("#due-date").value;
-    const formattedDate = format(new Date(dueDate), "dd/MM/yyyy")
     const priority = document.querySelector("#priority").value;
     const project = document.querySelector("#project-options").value;
-    app.loadTask(taskTitle, description, formattedDate, priority, project);
+    app.loadTask(taskTitle, description, dueDate, priority, project);
     newTaskModal.classList.remove("show");
   });
 
@@ -199,7 +199,7 @@ const domStuff = (function() {
       <p>${title}</p>
     </div>
     <div>
-      <p>${dueDate}</p>
+      <p>${dueDate.split('-').reverse().join('-')}</p>
       <img src="images/edit.png" id="edit-task">
       <img src="images/trash.png" id="delete-task">
       </div>
@@ -292,7 +292,6 @@ const app = (function() {
 
   const loadProject = (title) => {
     dataBase.pushProject(title);
-    console.log(dataBase.projectData);
     domStuff.clearContent("taskContainer");
     domStuff.clearContent("projectList")
     grabProjectData();
@@ -315,20 +314,25 @@ const app = (function() {
     domStuff.clearContent("projectOptions");
     domStuff.addProjectOptions("N/A")
     dataBase.projectData.forEach(item => {
-      console.log(item.title);
       domStuff.addProjectOptions(item.title);
     })
   }
 
   const sortByWeek = () => {
-    // const week = dataBase.taskData.filter(item => format(new Date(item.dueDate), "dd/MM/yyyy")) === isThisWeek()
-    const week = dataBase.taskData.filter(item => item.dueDate === isThisWeek(item.dueDate), {weekStartsOn: 1} )
-    // dataBase.taskData.forEach(item => console.log(format(new Date(item.dueDate), "dd/MM/yyyy")));
-    console.log(week);
+    const week = dataBase.taskData.filter(item => {
+      const date = toDate(new Date(item.dueDate));
+      return isThisWeek(date);
+    })
+    week.forEach(item => domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate));
   }
 
+  
   const sortByToday = () => {
-    
+    const today = dataBase.taskData.filter(item => {
+      const date = toDate(new Date(item.dueDate));
+      return isToday(date);
+    })
+    today.forEach(item => domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate));
   }
 
   const editTask = () => {
@@ -342,7 +346,7 @@ const app = (function() {
 
   // when user deletes a project run a function that takes in project name as a parameter, loop through taskData and delete tasks with corresponding project name
 
-  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek }
+  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday }
 })();
 
 console.log(dataBase.projectData);
