@@ -84,11 +84,34 @@
   <div class="view-task">
     <div class="view-task-content">
       <span class="close-view-task">&times;</span>
-      <h2 id="view-task-title"></h2>
-      <p>Description: <span id="view-task-description"></span></p>
-      <p>Due: <span id="view-task-dueDate"></span></p>
-      <p>Priority: <span id="view-task-priority"></span></p>
-      <p>Project: <span id="view-task-project"></span></p>
+      <form id="view-task" action="">
+        <!-- <h2 id="view-task-title"></h2>
+        <p>Description: <span id="view-task-description"></span></p>
+        <p>Due: <span id="view-task-dueDate"></span></p>
+        <p>Priority: <span id="view-task-priority"></span></p>
+        <p>Project: <span id="view-task-project"></span></p> -->
+        <label for="view-title"><p>Title:</p></label>
+        <input class="input-field" type="text" id="view-title" required>
+
+        <label for="view-description"><p>Description:</p></label>
+        <textarea class="input-field" rows="4" style="height: 120px" id="view-description" required></textarea>
+
+        <label for="view-due-date"><p>Due date:</p></label>
+        <input class="input-field" type="date" id="view-due-date" required>
+
+        <label for="view-priority"><p>Priority:</p></label>
+        <select class="input-field" id="view-priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label for="project"><p>Project:</p></label>
+        <select class="input-field" id="view-project-options">
+
+        </select>
+
+    </form>
     </div>
   </div>
 
