@@ -1,7 +1,7 @@
 
-import { isToday, isThisWeek, format, parseISO, toDate } from 'date-fns';
+import { isToday, isThisWeek, toDate } from 'date-fns';
 import { is } from 'date-fns/locale';
-//factory func that makes to-dos
+
 const taskFactory = (title, description, dueDate, priority, project) => {
   const task = {
     title,
@@ -17,31 +17,24 @@ const projectFactory = (title) => {
   return { title };
 }
 
-
-
 //holds all data
 const dataBase = (function() {
   let taskData = [];
   let projectData = [];
-
   const pushTask = (title, description, dueDate, priority, project) => {
     const task = taskFactory(title, description, dueDate, priority, project);
     taskData.push(task);
   }
-
   const pushProject = (title) => {
     const project = projectFactory(title);
     projectData.push(project);
   }
-
   const deleteTask = (index) => {
     taskData.splice(index, 1);
   }
-
   const deleteProject = (index) => {
     projectData.splice(index, 1);
   }
-
   return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject};
 })();
 
@@ -74,10 +67,10 @@ const domStuff = (function() {
   const viewTaskForm = document.querySelector("#view-task")
   const viewTaskTitle = document.querySelector("#view-title");
   const viewTaskDueDate = document.querySelector("#view-due-date");
-  const viewTaskProject = document.querySelector("#view-project");
+  const viewTaskProjects = document.querySelector("#view-project-options");
   const viewTaskDescription = document.querySelector("#view-description");
   const viewTaskPriority = document.querySelector("#view-priority");
-
+  let viewTaskIndex = 0;
   sidePanel.addEventListener("click", e => {
     if(e.target.matches(".project") || e.target.matches(".projectText")) {
       clearContent("taskContainer");
@@ -112,8 +105,22 @@ const domStuff = (function() {
   });
 
   mainPanel.addEventListener("click", e => {
-    if(e.target.matches("#add-task")) triggerModalContainer(newTaskModal);
-    if(e.target.matches(".task")) viewTask(e.target.dataset.index);
+    if(e.target.matches("#add-task")) {
+      clearContent("newTaskForm");
+      triggerModalContainer(newTaskModal);
+    }
+    if(e.target.matches(".task")) {
+      viewTaskIndex = e.target.dataset.index;
+      viewTask(e.target.dataset.index)
+    }
+    if(e.target.matches('#delete-task')) {
+      const taskIndex = e.target.parentNode.parentNode.dataset.index;
+      dataBase.deleteTask(taskIndex);
+      e.target.parentNode.parentNode.remove();
+    }
+    if (e.target.matches("input")) {
+      e.target.checked ? e.target.parentNode.parentNode.classList.toggle("done") :  e.target.parentNode.parentNode.classList.toggle("done");
+      };
   })
 
   newTaskModal.addEventListener("click", (e) => {
@@ -131,29 +138,17 @@ const domStuff = (function() {
     if(e.target.matches(".close-view-task")) viewTaskModal.classList.remove("show");
   })
 
-
-  //main page event listeners
-  taskContainer.addEventListener("click", e => {
-    if(e.target.matches('#delete-task')) {
-      const taskIndex = e.target.parentNode.parentNode.dataset.index;
-      dataBase.deleteTask(taskIndex);
-      e.target.parentNode.parentNode.remove();
-    }
-    if (e.target.matches("input")) {
-      e.target.checked ? e.target.parentNode.parentNode.classList.toggle("done") :  e.target.parentNode.parentNode.classList.toggle("done");
-      };
-    })
-
-  const newTaskForm = document.querySelector("#new-task").addEventListener("submit", e => {
-    e.preventDefault();
-    const taskTitle = document.querySelector("#task-title").value;
-    const description = document.querySelector("#description").value;
-    const dueDate = document.querySelector("#due-date").value;
-    const priority = document.querySelector("#priority").value;
-    const project = document.querySelector("#project-options").value;
-    app.loadTask(taskTitle, description, dueDate, priority, project);
-    newTaskModal.classList.remove("show");
-  });
+  const newTaskForm = document.querySelector("#new-task");
+    newTaskForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const taskTitle = document.querySelector("#task-title").value;
+      const description = document.querySelector("#description").value;
+      const dueDate = document.querySelector("#due-date").value;
+      const priority = document.querySelector("#priority").value;
+      const project = document.querySelector("#project-options").value;
+      app.loadTask(taskTitle, description, dueDate, priority, project);
+      newTaskModal.classList.remove("show");
+    });
 
   const newProjectForm = document.querySelector("#add-project").addEventListener("submit", e => {
     e.preventDefault();
@@ -163,15 +158,27 @@ const domStuff = (function() {
     projectContainer.classList.remove("show");
   })
 
-  // const viewTaskForm = document.querySelector("#edit-task").addEventListener("submit", e => {
-  //   e.preventDefault();
-  //   const taskTitle = document.querySelector("#task-title").value;
-  //   const description = document.querySelector("#description").value;
-  //   const dueDate = document.querySelector("#due-date").value;
-  //   const priority = document.querySelector("#priority").value;
-  //   const project = document.querySelector("#project-options").value;
-  //   editTaskModal.classList.remove("show");
-  // })
+  const viewTask = (task) => {
+    clearContent("viewTask");
+    app.addViewProjectOptions();
+    const index = task
+    const data = dataBase.taskData[index];
+    viewTaskTitle.value = data.title;
+    viewTaskDescription.value = data.description;
+    viewTaskDueDate.value = data.dueDate
+    viewTaskPriority.value = data.priority;
+    viewTaskProjects.value = data.project;
+    viewTaskModal.classList.add("show");
+  }
+
+  viewTaskForm.addEventListener("submit", e => {
+    e.preventDefault();
+    clearContent("taskContainer");
+    app.editTask(viewTaskIndex, viewTaskTitle.value, viewTaskDescription.value, viewTaskDueDate.value,   
+      viewTaskPriority.value, viewTaskProjects.value);
+      viewTaskModal.classList.remove("show");
+  })
+
   const triggerModalContainer = modal => {
     modal.classList.add("show");
   }
@@ -200,7 +207,6 @@ const domStuff = (function() {
     </div>
     <div>
       <p>${dueDate.split('-').reverse().join('-')}</p>
-      <img src="images/edit.png" id="edit-task">
       <img src="images/trash.png" id="delete-task">
       </div>
       `;
@@ -208,21 +214,7 @@ const domStuff = (function() {
       // taskContainer.insertBefore(task, taskContainer.firstElementChild.nextSibling);
   }
 
-  const viewTask = (task) => {
-    clearContent("viewTask");
-    const index = task
-    const data = dataBase.taskData[index];
-    viewTaskTitle.value = data.title;
-    viewTaskDescription.value = data.description;
-    viewTaskDueDate.value = data.dueDate
-    viewTaskPriority.value = data.priority;
-    // viewTaskProject.value = data.project;
-    // viewTaskDescription.innerText = data.description;
-    // viewTaskDueDate.innerText = data.dueDate.split('-').reverse().join('-')
-    // viewTaskPriority.innerText = data.priority;
-    // viewTaskProject.innerText = data.project;
-    viewTaskModal.classList.add("show");
-  }
+
 
 
   const addProjectOptions = (project) => {
@@ -230,7 +222,13 @@ const domStuff = (function() {
       option.setAttribute("value", project);
       option.innerText = project;
       projectOptions.appendChild(option);
+  }
 
+  const addViewProjectOptions = (project) => {
+    const option = document.createElement("option");
+    option.setAttribute("value", project);
+    option.innerText = project;
+    viewTaskProjects.appendChild(option);
   }
 
   const project = (title, index) => {
@@ -258,12 +256,18 @@ const domStuff = (function() {
       case "projectList":
         projectList.innerHTML = "";
         break;
+      case "viewTaskProjects":
+        viewTaskProjects.innerHTML = "";
       case "viewTask":
         viewTaskForm.reset();
+        break;
+      case "newTaskForm":
+        newTaskForm.reset();
+        break;
     };
   }
   
-  return { render, task, project, clearContent, addProjectOptions }
+  return { render, task, project, clearContent, addProjectOptions, addViewProjectOptions }
 })();
 
 //magic stuff happens here
@@ -313,6 +317,13 @@ const app = (function() {
       domStuff.addProjectOptions(item.title);
     })
   }
+  const addViewProjectOptions = () => {
+    domStuff.clearContent("viewTaskProjects")
+    domStuff.addViewProjectOptions("N/A")
+    dataBase.projectData.forEach(item => {
+      domStuff.addViewProjectOptions(item.title);
+    })
+  }
 
   const sortByWeek = () => {
     const week = dataBase.taskData.filter(item => {
@@ -331,10 +342,15 @@ const app = (function() {
     today.forEach(item => domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate));
   }
 
-  const editTask = () => {
-
+  const editTask = (index, title, description, dueDate, priority, project) => {
+    dataBase.taskData[index].title = title;
+    dataBase.taskData[index].description = description;
+    dataBase.taskData[index].dueDate = dueDate;
+    dataBase.taskData[index].priority = priority;
+    dataBase.taskData[index].project = project;
+    grabTaskData();
   }
 
-  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday }
+  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday, addViewProjectOptions, editTask }
 })();
 

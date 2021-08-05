@@ -197,7 +197,7 @@ main {
   user-select: none;
 }
 
-.close-new-task:hover, .close-new-project:hover, .close-view-task:hover, {
+.close-new-task:hover, .close-new-project:hover, .close-view-task:hover {
   cursor: pointer;
   border-radius: 50%;
   width: 7px;
