@@ -15,6 +15,7 @@ const projectFactory = (title) => {
 
 //holds all data
 const dataBase = (function() {
+const localStorage = window.localStorage;
   let taskData = [];
   let projectData = [];
   const pushTask = (title, description, dueDate, priority, project) => {
@@ -31,7 +32,31 @@ const dataBase = (function() {
   const deleteProject = (index) => {
     projectData.splice(index, 1);
   }
-  return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject};
+  const setTaskData = () => {
+    localStorage.setItem('taskData', JSON.stringify(taskData));
+}
+  const setProjectData = () => {
+    localStorage.setItem('projectData', JSON.stringify(projectData))
+  }
+
+  const loadLocalStorage = () => {
+    taskData = JSON.parse(localStorage.getItem("taskData"));
+    projectData = JSON.parse(localStorage.getItem("projectData"));
+    console.log(taskData, projectData)
+    if(taskData && projectData === null) {
+      setTaskData();
+      setProjectData();
+    }
+    console.log(localStorage)
+  }
+
+
+  return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject, loadLocalStorage,};
 })();
+
+
+
+
+
 
 export { taskFactory, projectFactory, dataBase };

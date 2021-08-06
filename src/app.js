@@ -4,10 +4,7 @@ import { isToday, isThisWeek, toDate } from 'date-fns';
 import { is } from 'date-fns/locale';
 import database from 'mime-db';
 
-
-
-
-
+dataBase.loadLocalStorage();
 
 //magic stuff happens here
 const app = (function() {
@@ -72,7 +69,6 @@ const app = (function() {
     week.forEach(item => domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate));
   }
 
-  
   const sortByToday = () => {
     const today = dataBase.taskData.filter(item => {
       const date = toDate(new Date(item.dueDate));
@@ -88,10 +84,17 @@ const app = (function() {
     dataBase.taskData[index].priority = priority;
     dataBase.taskData[index].project = project;
     grabTaskData();
+    
   }
 
   return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday, addViewProjectOptions, editTask }
 })();
 
+
+
 export { app }
 
+/*
+local storage shenanigans 
+
+*/

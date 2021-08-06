@@ -175,7 +175,6 @@ const domStuff = (function() {
       </div>
       `;
       taskContainer.appendChild(task);
-      // taskContainer.insertBefore(task, taskContainer.firstElementChild.nextSibling);
   }
 
   const addProjectOptions = (project) => {
@@ -201,7 +200,6 @@ const domStuff = (function() {
       `;
     projectList.appendChild(project);
   }
-
 
   const clearContent = (contentType) => {
     switch(contentType) {
