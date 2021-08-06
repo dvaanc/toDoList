@@ -1,42 +1,5 @@
-
-import { isToday, isThisWeek, toDate } from 'date-fns';
-import { is } from 'date-fns/locale';
-
-const taskFactory = (title, description, dueDate, priority, project) => {
-  const task = {
-    title,
-    description, 
-    dueDate,
-    priority, 
-    project
-  }
-  return task;
-};
-
-const projectFactory = (title) => {
-  return { title };
-}
-
-//holds all data
-const dataBase = (function() {
-  let taskData = [];
-  let projectData = [];
-  const pushTask = (title, description, dueDate, priority, project) => {
-    const task = taskFactory(title, description, dueDate, priority, project);
-    taskData.push(task);
-  }
-  const pushProject = (title) => {
-    const project = projectFactory(title);
-    projectData.push(project);
-  }
-  const deleteTask = (index) => {
-    taskData.splice(index, 1);
-  }
-  const deleteProject = (index) => {
-    projectData.splice(index, 1);
-  }
-  return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject};
-})();
+import { app } from './app';
+import { taskFactory, projectFactory, dataBase } from './dataBase';
 
 //responsible for manipulating the dom
 const domStuff = (function() {
@@ -77,6 +40,7 @@ const domStuff = (function() {
       clearContent("mainPanel");
       render(e.target.innerText);
       app.filterTask(e.target.innerText);
+    
     }
   })
 
@@ -214,9 +178,6 @@ const domStuff = (function() {
       // taskContainer.insertBefore(task, taskContainer.firstElementChild.nextSibling);
   }
 
-
-
-
   const addProjectOptions = (project) => {
     const option = document.createElement("option");
       option.setAttribute("value", project);
@@ -270,87 +231,4 @@ const domStuff = (function() {
   return { render, task, project, clearContent, addProjectOptions, addViewProjectOptions }
 })();
 
-//magic stuff happens here
-const app = (function() {
-  const loadTask = (taskTitle, description, dueDate, priority, project) => {
-    pushTask(taskTitle, description, dueDate, priority, project);
-    domStuff.clearContent("taskContainer");
-    grabTaskData();
- 
-    console.log(dataBase.taskData);
-  }
-
-  const pushTask = (taskTitle, description, dueDate, priority, project) => {
-    dataBase.pushTask(taskTitle, description, dueDate, priority, project);
-  }
-
-  const grabTaskData = () => {
-    dataBase.taskData.forEach(item => {
-      domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate);
-    })
-  }
-
-  const loadProject = (title) => {
-    dataBase.pushProject(title);
-    domStuff.clearContent("taskContainer");
-    domStuff.clearContent("projectList")
-    grabProjectData();
-  }
-
-  const grabProjectData = () => {
-    dataBase.projectData.forEach(item => {
-      domStuff.project(item.title, dataBase.projectData.indexOf(item));
-    })
-  }
-
-  const filterTask = (projectTitle) => {
-   const filteredTasks = dataBase.taskData.filter(item => item.project === projectTitle);
-    filteredTasks.forEach(item => {
-      domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate);
-    })
-  }
-
-  const addProjectOptions = () => {
-    domStuff.clearContent("projectOptions");
-    domStuff.addProjectOptions("N/A")
-    dataBase.projectData.forEach(item => {
-      domStuff.addProjectOptions(item.title);
-    })
-  }
-  const addViewProjectOptions = () => {
-    domStuff.clearContent("viewTaskProjects")
-    domStuff.addViewProjectOptions("N/A")
-    dataBase.projectData.forEach(item => {
-      domStuff.addViewProjectOptions(item.title);
-    })
-  }
-
-  const sortByWeek = () => {
-    const week = dataBase.taskData.filter(item => {
-      const date = toDate(new Date(item.dueDate));
-      return isThisWeek(date);
-    })
-    week.forEach(item => domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate));
-  }
-
-  
-  const sortByToday = () => {
-    const today = dataBase.taskData.filter(item => {
-      const date = toDate(new Date(item.dueDate));
-      return isToday(date);
-    })
-    today.forEach(item => domStuff.task(item.title, dataBase.taskData.indexOf(item), item.dueDate));
-  }
-
-  const editTask = (index, title, description, dueDate, priority, project) => {
-    dataBase.taskData[index].title = title;
-    dataBase.taskData[index].description = description;
-    dataBase.taskData[index].dueDate = dueDate;
-    dataBase.taskData[index].priority = priority;
-    dataBase.taskData[index].project = project;
-    grabTaskData();
-  }
-
-  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday, addViewProjectOptions, editTask }
-})();
-
+export { domStuff };
