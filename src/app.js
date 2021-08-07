@@ -4,20 +4,22 @@ import { isToday, isThisWeek, toDate } from 'date-fns';
 import { is } from 'date-fns/locale';
 import database from 'mime-db';
 
-dataBase.loadLocalStorage();
+
 
 //magic stuff happens here
 const app = (function() {
-  const loadTask = (taskTitle, description, dueDate, priority, project) => {
-    pushTask(taskTitle, description, dueDate, priority, project);
+  const initialiseData = () => {
+    dataBase.loadLocalStorage();
+    console.log(dataBase.taskData, dataBase.projectData);
+  }
+  
+  const createTask = (taskTitle, description, dueDate, priority, project) => {
+    dataBase.pushTask(taskTitle, description, dueDate, priority, project);
+    dataBase.saveTaskData();
     domStuff.clearContent("taskContainer");
     grabTaskData();
  
     console.log(dataBase.taskData);
-  }
-
-  const pushTask = (taskTitle, description, dueDate, priority, project) => {
-    dataBase.pushTask(taskTitle, description, dueDate, priority, project);
   }
 
   const grabTaskData = () => {
@@ -26,17 +28,31 @@ const app = (function() {
     })
   }
 
-  const loadProject = (title) => {
+  const createProject = (title) => {
     dataBase.pushProject(title);
+    dataBase.saveProjectData();
     domStuff.clearContent("taskContainer");
     domStuff.clearContent("projectList")
     grabProjectData();
   }
 
+
   const grabProjectData = () => {
     dataBase.projectData.forEach(item => {
       domStuff.project(item.title, dataBase.projectData.indexOf(item));
-    })
+    });
+  }
+
+  const deleteTask = (taskIndex) => {
+    dataBase.deleteTask(taskIndex);
+    dataBase.saveTaskData();
+    dataBase.loadLocalStorage();
+  }
+
+  const deleteProject = (projectIndex) => {
+    dataBase.deleteProject(projectIndex);
+    dataBase.saveProjectData();
+    dataBase.loadLocalStorage();
   }
 
   const filterTask = (projectTitle) => {
@@ -83,13 +99,16 @@ const app = (function() {
     dataBase.taskData[index].dueDate = dueDate;
     dataBase.taskData[index].priority = priority;
     dataBase.taskData[index].project = project;
+    dataBase.saveTaskData();
+    dataBase.loadLocalStorage();
     grabTaskData();
     
   }
 
-  return { loadTask, loadProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday, addViewProjectOptions, editTask }
+  return { createTask, createProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday, addViewProjectOptions, editTask, initialiseData, deleteTask }
 })();
 
+// app.initialiseData();
 
 
 export { app }

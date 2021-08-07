@@ -1,3 +1,6 @@
+import { app } from './app';
+import { domStuff } from './DOM';
+
 const taskFactory = (title, description, dueDate, priority, project) => {
   const task = {
     title,
@@ -32,10 +35,10 @@ const localStorage = window.localStorage;
   const deleteProject = (index) => {
     projectData.splice(index, 1);
   }
-  const setTaskData = () => {
+  const saveTaskData = () => {
     localStorage.setItem('taskData', JSON.stringify(taskData));
 }
-  const setProjectData = () => {
+  const saveProjectData = () => {
     localStorage.setItem('projectData', JSON.stringify(projectData))
   }
 
@@ -43,20 +46,14 @@ const localStorage = window.localStorage;
     taskData = JSON.parse(localStorage.getItem("taskData"));
     projectData = JSON.parse(localStorage.getItem("projectData"));
     console.log(taskData, projectData)
-    if(taskData && projectData === null) {
-      setTaskData();
-      setProjectData();
-    }
-    console.log(localStorage)
+    // if(taskData && projectData === null) {
+    //   saveTaskData();
+    //   saveProjectData();
+    // }
   }
 
 
-  return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject, loadLocalStorage,};
+  return { pushTask, pushProject, taskData, projectData , deleteTask, deleteProject, loadLocalStorage, saveTaskData, saveProjectData };
 })();
-
-
-
-
-
 
 export { taskFactory, projectFactory, dataBase };

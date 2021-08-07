@@ -40,7 +40,6 @@ const domStuff = (function() {
       clearContent("mainPanel");
       render(e.target.innerText);
       app.filterTask(e.target.innerText);
-    
     }
   })
 
@@ -79,7 +78,7 @@ const domStuff = (function() {
     }
     if(e.target.matches('#delete-task')) {
       const taskIndex = e.target.parentNode.parentNode.dataset.index;
-      dataBase.deleteTask(taskIndex);
+      app.deleteTask(taskIndex);
       e.target.parentNode.parentNode.remove();
     }
     if (e.target.matches("input")) {
@@ -110,14 +109,14 @@ const domStuff = (function() {
       const dueDate = document.querySelector("#due-date").value;
       const priority = document.querySelector("#priority").value;
       const project = document.querySelector("#project-options").value;
-      app.loadTask(taskTitle, description, dueDate, priority, project);
+      app.createTask(taskTitle, description, dueDate, priority, project);
       newTaskModal.classList.remove("show");
     });
 
   const newProjectForm = document.querySelector("#add-project").addEventListener("submit", e => {
     e.preventDefault();
     const projectTitle = document.querySelector("#project-title").value;
-    app.loadProject(projectTitle);
+    app.createProject(projectTitle);
     app.addProjectOptions();
     projectContainer.classList.remove("show");
   })
@@ -197,6 +196,7 @@ const domStuff = (function() {
       project.setAttribute("data-index", index);
       project.innerHTML = `
         <p class="projectText">${title}</p>
+        <img src="images/trash.png" id="delete-project">
       `;
     projectList.appendChild(project);
   }
