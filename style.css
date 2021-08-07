@@ -141,11 +141,11 @@ main {
 
 }
 
-#delete-task, #edit-task{
+#delete-task, #edit-task, #delete-project {
   border-radius: 50%;
 }
 
-#delete-task:hover {
+#delete-task:hover, #delete-project:hover {
   background-color: red;
 }
 
