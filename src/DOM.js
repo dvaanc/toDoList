@@ -196,7 +196,6 @@ const domStuff = (function() {
       project.setAttribute("data-index", index);
       project.innerHTML = `
         <p class="projectText">${title}</p>
-        <img src="images/trash.png" id="delete-project">
       `;
     projectList.appendChild(project);
   }

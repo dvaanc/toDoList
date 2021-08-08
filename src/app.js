@@ -10,7 +10,11 @@ import database from 'mime-db';
 const app = (function() {
   const initialiseData = () => {
     dataBase.loadLocalStorage();
-    console.log(dataBase.taskData, dataBase.projectData);
+    console.log(dataBase.taskData);
+    console.log( dataBase.projectData);
+    grabTaskData();
+    grabProjectData();
+  
   }
   
   const createTask = (taskTitle, description, dueDate, priority, project) => {
@@ -108,7 +112,7 @@ const app = (function() {
   return { createTask, createProject, grabProjectData, grabTaskData, filterTask, addProjectOptions, sortByWeek, sortByToday, addViewProjectOptions, editTask, initialiseData, deleteTask }
 })();
 
-// app.initialiseData();
+app.initialiseData();
 
 
 export { app }

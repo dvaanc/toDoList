@@ -43,13 +43,14 @@ const localStorage = window.localStorage;
   }
 
   const loadLocalStorage = () => {
-    taskData = JSON.parse(localStorage.getItem("taskData"));
-    projectData = JSON.parse(localStorage.getItem("projectData"));
-    console.log(taskData, projectData)
-    // if(taskData && projectData === null) {
-    //   saveTaskData();
-    //   saveProjectData();
-    // }
+    const taskJSON = JSON.parse(localStorage.getItem("taskData"));
+    const projectJSON = JSON.parse(localStorage.getItem("projectData"));
+
+    if(taskJSON === null) saveTaskData();
+    if(projectJSON === null) saveProjectData();
+    
+    taskJSON.forEach(task => taskData.push(task))
+    projectJSON.forEach(project => projectData.push(project))
   }
 
 
