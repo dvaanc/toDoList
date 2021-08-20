@@ -1,10 +1,11 @@
-Part of TOP 
-
-- Basic functionality works, needs alot more polishing. 
+Description:
+- This project is part of the Odin Project curriculum.
+- The web app works fine for now, but theres still some bugs and more functionality
+  That needs implementinh. 
 - Will polish this project sometime in the future.
 
 Live Page:
-https://dvaanc.github.io/toDoList/
+👉 https://dvaanc.github.io/toDoList/
 
 Features to be added
 - Delete Project (Will have to clear local storage via console for now)
